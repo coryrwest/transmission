@@ -1,12 +1,15 @@
 FROM debian:jessie
-MAINTAINER David Personette <dperson@dperson.com>
+MAINTAINER Cory Westropp <cory@corywestropp.com>
 
 # Install transmission
+COPY settings.json /tmp/
+
 RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends transmission-daemon curl \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}') &&\
     apt-get clean && \
+    service transmission-daemon stop && \
     dir="/var/lib/transmission-daemon" && \
     rm $dir/info && \
     mv $dir/.config/transmission-daemon $dir/info && \
@@ -24,6 +27,8 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     sed -i '/"rpc-whitelist"/a\    "speed-limit-up": 10,' $file && \
     sed -i '/"speed-limit-up"/a\    "speed-limit-up-enabled": true,' $file && \
     chown -Rh debian-transmission. $dir && \
+    mv /tmp/settings.json $dir && \
+    service transmission-daemon start && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 COPY transmission.sh /usr/bin/
 
