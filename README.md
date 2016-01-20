@@ -11,6 +11,8 @@ a cross-platform back-end.
 
 # How to use this image
 
+This image is based off of [dperson/transmission](https://github.com/dperson/transmission).
+
 This Transmission container was built to automatically download a level1 host
 filter (can be used with dperson/openvpn).
 
@@ -26,6 +28,10 @@ filter (can be used with dperson/openvpn).
 `TRGROUP` below, for how to change them.
 
 ## Hosting a Transmission instance
+
+The only modification made to this image was the inclusion of a settings.json that 
+can be injected into the container. Make sure settings.json matches what you want 
+the container settings to be.
 
     sudo docker run --name transmission -p 9091:9091 -d dperson/transmission
 
